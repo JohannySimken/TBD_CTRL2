@@ -7,24 +7,21 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "users")
-public class UserEntity {
+@Table(name = "sectors")
+public class SectorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String username;
-
     @Column(nullable = false, unique = true, length = 100)
-    private String email;
+    private String name;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
-    private String passwordHash;
+    @Column(nullable = false, length = 50)
+    private String category;
 
-    @Column(nullable = false, length = 20)
-    private String role = "USER";
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Column(columnDefinition = "geography(Point,4326)", nullable = false)
     private Point location;
