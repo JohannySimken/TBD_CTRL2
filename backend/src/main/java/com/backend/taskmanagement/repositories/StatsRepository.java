@@ -4,8 +4,11 @@ import com.backend.taskmanagement.entities.TaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
 
     //1- ¿Cuántas tareas ha hecho el usuario por sector?
