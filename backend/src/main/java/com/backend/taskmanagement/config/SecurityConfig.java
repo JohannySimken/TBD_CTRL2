@@ -35,7 +35,7 @@ public class SecurityConfig {
                         //MODIFICAR ESTE ARCHIVO PARA LAS RUTAS !!!!
 
                         //RUTAS PUBLICAS
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // .requestMatchers("/api/auth/**").permitAll()
 
                         //RUTAS ESPECIFICAS
 
