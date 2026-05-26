@@ -1,5 +1,6 @@
 package com.backend.taskmanagement.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.locationtech.jts.geom.Point;
@@ -26,6 +27,7 @@ public class UserEntity {
     @Column(nullable = false, length = 20)
     private String role = "USER";
 
+    @JsonIgnore
     @Column(columnDefinition = "geography(Point,4326)", nullable = false)
     private Point location;
 

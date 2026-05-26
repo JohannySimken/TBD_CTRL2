@@ -1,5 +1,6 @@
 package com.backend.taskmanagement.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.locationtech.jts.geom.Point;
@@ -23,6 +24,7 @@ public class SectorEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @JsonIgnore
     @Column(columnDefinition = "geography(Point,4326)", nullable = false)
     private Point location;
 

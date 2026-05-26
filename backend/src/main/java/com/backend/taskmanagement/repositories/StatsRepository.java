@@ -24,11 +24,11 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
 
     //2- ¿Cuál es la tarea más cercana al usuario (que esté pendiente)?
     @Query(value = """
-    SELECT * FROM tasks t 
-    JOIN users u ON u.ud = t.user_id
+    SELECT t.* FROM tasks t 
+    JOIN users u ON u.id = t.user_id
     WHERE u.id= :userId
         AND t.status = 'PENDING'
-    ORDER BY ST_DISTANCE(t.location::geography, u.location::geography) ASC LIMIT 1
+    ORDER BY ST_Distance(t.location::geography, u.location::geography) ASC LIMIT 1
     """, nativeQuery = true)
     TaskEntity findClosestPendingTask(@Param("userId") Long userId);
 
@@ -39,6 +39,7 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     JOIN sectors s on t.sector_id = s.id
     CROSS JOIN users u 
     WHERE u.id= :userId
+        AND t.user_id = :userId
         AND t.status = 'COMPLETED'
         and ST_DWithin(t.location::geography, u.location::geography, 2000)
     GROUP BY s.name
@@ -53,7 +54,7 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     CROSS JOIN users u
     WHERE u.id = :userId
         AND t.user_id = :userId
-        AND t.status = 'PENDING'
+        AND t.status = 'COMPLETED'
     """, nativeQuery = true)
     Double averageDistanceCompletedTasks(@Param("userId") Long userId);
 
@@ -61,7 +62,7 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     @Query(value = """
     SELECT s.name AS sector_name,
         COUNT(t.id) AS pending_count,
-        ST_AsText(ST_Centroid(ST_Collect(t.location::geography))) AS centroid_wkt
+        ST_AsText(ST_Centroid(ST_Collect(t.location::geometry))) AS centroid_wkt
     FROM tasks t 
     JOIN sectors s ON t.sector_id = s.id
     WHERE t.user_id = :userId
@@ -75,10 +76,10 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     @Query(value = """
     SELECT u.username, s.name AS sector_name, COUNT(t.id) AS task_count
     FROM tasks t
-    JOIN users u ON t.task_id = u.id
+    JOIN users u ON t.user_id = u.id
     JOIN sectors s ON t.sector_id = s.id
     WHERE t.status = 'COMPLETED'
-    GROUP BY u.username
+    GROUP BY u.username, s.name
     ORDER BY task_count DESC
     """, nativeQuery = true)
     List<Object[]> countTasksPerUserBySector();
@@ -90,6 +91,7 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     JOIN sectors s on t.sector_id = s.id
     CROSS JOIN users u 
     WHERE u.id= :userId
+        AND t.user_id = :userId
         AND t.status = 'COMPLETED'
         AND ST_DWithin(t.location::geography, u.location::geography, 5000)
     GROUP BY s.name
