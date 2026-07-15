@@ -1,5 +1,8 @@
 -- Activar PostGIS en la base de datos
 CREATE EXTENSION IF NOT EXISTS postgis;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS sectors CASCADE;
+DROP TABLE IF EXISTS tasks CASCADE;
 
 -- Tabla USERS
 CREATE TABLE users (

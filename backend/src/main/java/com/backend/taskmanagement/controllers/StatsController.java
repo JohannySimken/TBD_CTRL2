@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -75,6 +76,15 @@ public class StatsController {
     public ResponseEntity<Double> getAvgDistanceCompleted(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return ResponseEntity.ok(statsService.getAvgDistanceCompleted(userId));
+    }
+
+    // 4b) Igual que la 4, pero contra un punto arbitrario elegido por el usuario (no el registrado en la BD)
+    @GetMapping("/avg-distance-completed-custom")
+    public ResponseEntity<Double> getAvgDistanceCompletedCustom(HttpServletRequest request,
+                                                                  @RequestParam Double latitude,
+                                                                  @RequestParam Double longitude) {
+        Long userId = (Long) request.getAttribute("userId");
+        return ResponseEntity.ok(statsService.getAvgDistanceCompletedFromPoint(userId, latitude, longitude));
     }
     // Agrupación espacial
     // 5) Sectores donde se concentran las tareas pendientes (con centroide)

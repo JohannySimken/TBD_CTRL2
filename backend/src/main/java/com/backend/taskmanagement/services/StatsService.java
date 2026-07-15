@@ -84,6 +84,11 @@ public class StatsService {
         return statsRepository.averageDistanceCompletedToUser(userId);
     }
 
+    // 4b) Igual que la 4, pero contra un punto arbitrario elegido por el usuario en el momento
+    public Double getAvgDistanceCompletedFromPoint(Long userId, Double latitude, Double longitude) {
+        return statsRepository.averageDistanceCompletedFromPoint(userId, latitude, longitude);
+    }
+
     // Agrupación espacial
 
     // 5) Sectores donde se concentran las tareas pendientes (con centroide)

@@ -72,10 +72,30 @@
           <span class="section-num">4</span>
           <div>
             <h3>¿Cuál es el promedio de distancia de las tareas completadas respecto a la ubicación del usuario?</h3>
+            <p class="section-desc">Elegí un punto en el mapa (o usá tu ubicación actual) y calculá el promedio de las tareas completadas contra ese punto.</p>
           </div>
         </div>
-        <div class="big-metric">
-          <span class="metric-value">{{ avgDist !== null ? Number(avgDist).toFixed(2) : '—' }}</span>
+
+        <div id="custom-point-map" style="height: 260px; width: 100%; margin-bottom: 12px"></div>
+
+        <div class="custom-point-controls">
+          <button type="button" @click="useMyLocation">Usar mi ubicación actual</button>
+          <button
+            type="button"
+            :disabled="customLat === null || customLoading"
+            @click="calculateCustomAvg"
+          >
+            {{ customLoading ? 'Calculando...' : 'Calcular promedio' }}
+          </button>
+        </div>
+
+        <p v-if="customLat !== null" class="section-desc">
+          Punto seleccionado: {{ customLat.toFixed(4) }}, {{ customLng.toFixed(4) }}
+        </p>
+        <p v-if="customError" class="empty">{{ customError }}</p>
+
+        <div v-if="customAvgDist !== null" class="big-metric">
+          <span class="metric-value">{{ (Number(customAvgDist) / 1000).toFixed(2) }}</span>
           <span class="metric-unit">km</span>
         </div>
       </section>
@@ -151,14 +171,39 @@
         </div>
       </section>
 
+      <div class="divider"></div>
+
+      <!-- ───────────────────────── SECCIÓN 8 ───────────────────────── -->
+      <section class="stat-section">
+        <div class="section-header">
+          <span class="section-num">8</span>
+          <div>
+            <h3>¿Cuál es el promedio de distancia entre las tareas completadas y el punto registrado del usuario?</h3>
+          </div>
+        </div>
+        <div class="big-metric">
+          <span class="metric-value">{{ avgDist !== null ? (Number(avgDist) / 1000).toFixed(2) : '—' }}</span>
+          <span class="metric-unit">km</span>
+        </div>
+      </section>
+
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import statsApi from '@/api/stats.js'
 import taskApi from '@/api/task.js'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import markerIconUrl from 'leaflet/dist/images/marker-icon.png'
+import markerShadowUrl from 'leaflet/dist/images/marker-shadow.png'
+L.Marker.prototype.options.icon = L.icon({
+  iconUrl: markerIconUrl,
+  shadowUrl: markerShadowUrl,
+  iconAnchor: [12, 41],
+})
 
 const loading = ref(true)
 const avgDist = ref(null)
@@ -169,11 +214,68 @@ const clusters = ref([])
 const ranking = ref([])
 const tasksBySector = ref([])
 
+// Sección 4: punto arbitrario elegido por el usuario
+const customLat = ref(null)
+const customLng = ref(null)
+const customAvgDist = ref(null)
+const customLoading = ref(false)
+const customError = ref('')
+let customMap = null
+let customMarker = null
+
 const maxCluster = computed(() =>
   clusters.value.reduce((max, c) => Math.max(max, c.pendingCount), 1),
 )
 
 const barWidth = (val, max) => Math.round((val / max) * 100)
+
+const setCustomPoint = (lat, lng) => {
+  customLat.value = lat
+  customLng.value = lng
+  customAvgDist.value = null
+  customError.value = ''
+  if (customMap) {
+    if (customMarker) customMap.removeLayer(customMarker)
+    customMarker = L.marker([lat, lng]).addTo(customMap)
+  }
+}
+
+const initCustomMap = () => {
+  customMap = L.map('custom-point-map').setView([-33.4489, -70.6693], 11)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+  }).addTo(customMap)
+  customMap.on('click', (e) => setCustomPoint(e.latlng.lat, e.latlng.lng))
+}
+
+const useMyLocation = () => {
+  if (!navigator.geolocation) {
+    customError.value = 'Tu navegador no soporta geolocalización.'
+    return
+  }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      setCustomPoint(pos.coords.latitude, pos.coords.longitude)
+      if (customMap) customMap.setView([pos.coords.latitude, pos.coords.longitude], 14)
+    },
+    () => {
+      customError.value = 'No se pudo obtener tu ubicación actual.'
+    },
+  )
+}
+
+const calculateCustomAvg = async () => {
+  if (customLat.value === null || customLng.value === null) return
+  customLoading.value = true
+  customError.value = ''
+  try {
+    customAvgDist.value = await statsApi.getAvgDistanceCompletedCustom(customLat.value, customLng.value)
+  } catch (err) {
+    customError.value = 'Error al calcular el promedio con ese punto.'
+  } finally {
+    customLoading.value = false
+  }
+}
 
 onMounted(async () => {
   try {
@@ -217,6 +319,8 @@ onMounted(async () => {
     console.error('Error cargando estadísticas:', err)
   } finally {
     loading.value = false
+    await nextTick()
+    initCustomMap()
   }
 })
 </script>
@@ -338,6 +442,29 @@ h2 {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+/* Controles de punto arbitrario (Sección 4) */
+.custom-point-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.custom-point-controls button {
+  padding: 8px 14px;
+  border: 1px solid #2c3e50;
+  background: #2c3e50;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.custom-point-controls button:disabled {
+  background: #b0b8c1;
+  border-color: #b0b8c1;
+  cursor: not-allowed;
 }
 
 /* Métrica grande */

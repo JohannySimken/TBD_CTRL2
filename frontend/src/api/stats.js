@@ -57,6 +57,19 @@ const statsService = {
   },
 
   /**
+   * 4b) Promedio de distancia de las tareas completadas respecto a un punto arbitrario elegido por el usuario.
+   * @param {number} latitude
+   * @param {number} longitude
+   * @returns {Promise<Number>} - Distancia promedio (Double en Java)
+   */
+  async getAvgDistanceCompletedCustom(latitude, longitude) {
+    const response = await api.get('/stats/avg-distance-completed-custom', {
+      params: { latitude, longitude },
+    })
+    return response.data || 0
+  },
+
+  /**
    * 5) Sectores donde se concentran tareas pendientes, incluye coordenadas del centroide.
    * @returns {Promise<Array>} - Lista de SectorClusterDTO { sectorName, pendingCount, centroidWkt }
    */

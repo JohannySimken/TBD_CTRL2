@@ -59,6 +59,17 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     """, nativeQuery = true)
     Double averageDistanceCompletedTasks(@Param("userId") Long userId);
 
+    //4b- Igual que la 4, pero contra un punto arbitrario elegido por el usuario (no el punto registrado en la BD)
+    @Query(value = """
+    SELECT AVG(ST_Distance(t.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)) AS avg_distance
+    FROM tasks t
+    WHERE t.user_id = :userId
+        AND t.status = 'COMPLETED'
+    """, nativeQuery = true)
+    Double averageDistanceCompletedFromPoint(@Param("userId") Long userId,
+                                              @Param("latitude") Double latitude,
+                                              @Param("longitude") Double longitude);
+
     //5- ¿En qué sectores geográficos se concentran la mayoría de las tareas pendientes? (utilizando agrupación espacial).
     @Query(value = """
     SELECT s.name AS sector_name,
