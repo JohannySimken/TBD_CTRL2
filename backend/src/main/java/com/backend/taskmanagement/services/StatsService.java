@@ -84,9 +84,9 @@ public class StatsService {
         return statsRepository.averageDistanceCompletedToUser(userId);
     }
 
-    // 4b) Igual que la 4, pero contra un punto arbitrario elegido por el usuario en el momento
-    public Double getAvgDistanceCompletedFromPoint(Long userId, Double latitude, Double longitude) {
-        return statsRepository.averageDistanceCompletedFromPoint(userId, latitude, longitude);
+    // Punto arbitrario: promedio desde un punto dado por el usuario en el mapa
+    public Double getAvgDistanceFromCustomPoint(Long userId, Double lat, Double lng) {
+        return statsRepository.averageDistanceCompletedFromPoint(userId, lat, lng);
     }
 
     // Agrupación espacial
