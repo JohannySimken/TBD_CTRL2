@@ -34,12 +34,32 @@ INSERT INTO sectors (name, category, description, location) VALUES
 ('La Reina',        'urbano', 'Comuna residencial al oriente de Santiago, cercana a la cordillera',          ST_GeogFromText('SRID=4326;POINT(-70.5392 -33.4458)')),
 ('Vitacura',        'urbano', 'Comuna de alta renta y espacios verdes en el nororiente capitalino',          ST_GeogFromText('SRID=4326;POINT(-70.5803 -33.3939)')),
 ('Talagante',       'rural',  'Capital de la Provincia de Talagante, al suroeste de Santiago',                ST_GeogFromText('SRID=4326;POINT(-70.9265 -33.6600)')),
-('Alumbrado Providencia', 'alumbrado',    'Mantención de luminarias públicas en Providencia',        ST_GeogFromText('SRID=4326;POINT(-70.6110 -33.4310)')),
-('Semáforos Las Condes',  'semaforos',    'Mantención de semáforos y señalización luminosa',         ST_GeogFromText('SRID=4326;POINT(-70.5770 -33.4085)')),
-('Bacheo Maipú',          'vialidad',     'Reparación de calzadas y baches en Maipú',                ST_GeogFromText('SRID=4326;POINT(-70.7650 -33.5180)')),
-('Áreas Verdes Ñuñoa',    'areas_verdes', 'Mantención de parques y plazas en Ñuñoa',                 ST_GeogFromText('SRID=4326;POINT(-70.6000 -33.4595)')),
-('Aseo Puente Alto',      'aseo',         'Retiro de residuos y limpieza urbana en Puente Alto',     ST_GeogFromText('SRID=4326;POINT(-70.5760 -33.6120)'));
-
+('San Bernardo',        'urbano', 'Comuna al sur de Santiago, con fuerte crecimiento residencial e industrial',    ST_GeogFromText('SRID=4326;POINT(-70.7000 -33.5928)')),
+('Isla de Maipo',       'rural',  'Comuna agrícola de la Provincia de Talagante, conocida por sus viñedos',        ST_GeogFromText('SRID=4326;POINT(-70.9067 -33.7500)')),
+('Peñaflor',            'urbano', 'Comuna de la Provincia de Talagante, en el eje poniente de Santiago',          ST_GeogFromText('SRID=4326;POINT(-70.8783 -33.6100)')),
+('Melipilla',           'rural',  'Capital de la Provincia de Melipilla, zona agrícola al suroeste de Santiago',  ST_GeogFromText('SRID=4326;POINT(-71.2150 -33.6900)')),
+('Buin',                'rural',  'Comuna agrícola e industrial al sur de la Región Metropolitana',                ST_GeogFromText('SRID=4326;POINT(-70.7419 -33.7333)')),
+('Paine',               'rural',  'Comuna rural al extremo sur de la provincia de Maipo',                          ST_GeogFromText('SRID=4326;POINT(-70.7419 -33.8072)')),
+('Colina',              'rural',  'Comuna al norte de Santiago, con áreas residenciales y agrícolas',              ST_GeogFromText('SRID=4326;POINT(-70.6733 -33.2003)')),
+('Quilicura',           'urbano', 'Comuna industrial y residencial al norte de Santiago',                          ST_GeogFromText('SRID=4326;POINT(-70.7333 -33.3633)')),
+('Renca',               'urbano', 'Comuna del sector poniente-norte de Santiago',                                  ST_GeogFromText('SRID=4326;POINT(-70.7217 -33.4033)')),
+('Pudahuel',            'urbano', 'Comuna poniente de Santiago, sede del Aeropuerto Arturo Merino Benítez',        ST_GeogFromText('SRID=4326;POINT(-70.7317 -33.4419)')),
+('Cerrillos',           'urbano', 'Comuna del sector suroriente-poniente de Santiago',                             ST_GeogFromText('SRID=4326;POINT(-70.7089 -33.4933)')),
+('Estación Central',    'urbano', 'Comuna céntrica y de alta densidad, sede de terminales de buses',               ST_GeogFromText('SRID=4326;POINT(-70.6822 -33.4597)')),
+('San Miguel',          'urbano', 'Comuna residencial al sur del centro de Santiago',                              ST_GeogFromText('SRID=4326;POINT(-70.6503 -33.4967)')),
+('La Cisterna',         'urbano', 'Comuna del sector sur de Santiago, importante nodo de transporte',              ST_GeogFromText('SRID=4326;POINT(-70.6664 -33.5333)')),
+('El Bosque',           'urbano', 'Comuna popular al sur de Santiago',                                             ST_GeogFromText('SRID=4326;POINT(-70.6733 -33.5647)')),
+('Recoleta',            'urbano', 'Comuna al norte del centro de Santiago',                                        ST_GeogFromText('SRID=4326;POINT(-70.6394 -33.4058)')),
+('Independencia',       'urbano', 'Comuna pequeña al norte del centro de Santiago',                                ST_GeogFromText('SRID=4326;POINT(-70.6614 -33.4197)')),
+('Lo Prado',            'urbano', 'Comuna poniente de Santiago, densamente poblada',                               ST_GeogFromText('SRID=4326;POINT(-70.7211 -33.4436)')),
+('Conchalí',            'urbano', 'Comuna del sector norte de Santiago',                                           ST_GeogFromText('SRID=4326;POINT(-70.6739 -33.3808)')),
+('Huechuraba',          'urbano', 'Comuna al pie de la cordillera, al norte de Santiago',                          ST_GeogFromText('SRID=4326;POINT(-70.6383 -33.3653)')),
+('Lo Barnechea',        'urbano', 'Comuna cordillerana al nororiente de Santiago',                                 ST_GeogFromText('SRID=4326;POINT(-70.5183 -33.3517)')),
+('San Joaquín',         'urbano', 'Comuna al sur del centro de Santiago',                                          ST_GeogFromText('SRID=4326;POINT(-70.6300 -33.4922)')),
+('Peñalolén',           'urbano', 'Comuna cordillerana del sector oriente de Santiago',                            ST_GeogFromText('SRID=4326;POINT(-70.5397 -33.4839)')),
+('Macul',               'urbano', 'Comuna residencial del sector suroriente de Santiago',                          ST_GeogFromText('SRID=4326;POINT(-70.5983 -33.4869)')),
+('Quinta Normal',       'urbano', 'Comuna poniente del centro de Santiago',                                        ST_GeogFromText('SRID=4326;POINT(-70.6919 -33.4275)')),
+('Cerro Navia',         'urbano', 'Comuna poniente de Santiago',                                                   ST_GeogFromText('SRID=4326;POINT(-70.7267 -33.4231)'));
 -- =====================================================================
 -- 3. TAREAS
 -- =====================================================================
