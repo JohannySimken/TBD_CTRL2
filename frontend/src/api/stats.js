@@ -52,7 +52,17 @@ const statsService = {
    */
   async getAvgDistanceCompleted() {
     const response = await api.get('/stats/avg-distance-completed')
-    // Si no hay tareas, el backend podría devolver un valor vacío, aseguramos retornar 0
+    return response.data || 0
+  },
+
+  /**
+   * 4-custom) Promedio de distancia de tareas completadas desde un punto arbitrario.
+   * @param {Number} lat
+   * @param {Number} lng
+   * @returns {Promise<Number>}
+   */
+  async getAvgDistanceCompletedCustom(lat, lng) {
+    const response = await api.get('/stats/avg-distance-custom', { params: { lat, lng } })
     return response.data || 0
   },
 

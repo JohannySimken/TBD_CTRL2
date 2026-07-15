@@ -78,6 +78,16 @@ public class StatsController {
         return ResponseEntity.ok(statsService.getAvgDistanceCompleted(userId));
     }
 
+    // Punto arbitrario elegido por el usuario en el mapa
+    @GetMapping("/avg-distance-custom")
+    public ResponseEntity<Double> getAvgDistanceCustom(
+            HttpServletRequest request,
+            @RequestParam Double lat,
+            @RequestParam Double lng) {
+        Long userId = (Long) request.getAttribute("userId");
+        return ResponseEntity.ok(statsService.getAvgDistanceFromCustomPoint(userId, lat, lng));
+    }
+
     // 4b) Igual que la 4, pero contra un punto arbitrario elegido por el usuario (no el registrado en la BD)
     @GetMapping("/avg-distance-completed-custom")
     public ResponseEntity<Double> getAvgDistanceCompletedCustom(HttpServletRequest request,
