@@ -41,7 +41,7 @@
 
         <div class="form-group">
           <label>Comuna</label>
-          <select v-model="taskForm.sectorId" required>
+          <select v-model="taskForm.sectorId" required @change="onSectorChange">
             <option value="" disabled>Selecciona una comuna</option>
             <option v-for="s in sectorsList" :key="s.id" :value="s.id">{{ s.name }}</option>
           </select>
@@ -76,7 +76,7 @@
 
             <div class="form-group">
               <label>Comuna</label>
-              <select v-model="editForm.sectorId" required>
+              <select v-model="editForm.sectorId" required @change="onEditSectorChange">
                 <option value="" disabled>Selecciona una comuna</option>
                 <option v-for="s in sectorsList" :key="s.id" :value="s.id">{{ s.name }}</option>
               </select>
@@ -181,9 +181,39 @@ const normalizeTask = (task) => ({
   sectorName: task.sectorName || task.sector?.name || task.sector?.label || 'Sin sector',
 })
 
+// Al cambiar comuna en el form de creación, actualizar coordenadas
+const onSectorChange = () => {
+  const sector = sectorsList.value.find((s) => s.id === taskForm.sectorId)
+  if (sector) {
+    taskForm.latitude = sector.latitude
+    taskForm.longitude = sector.longitude
+    console.log(`📌 [onSectorChange] Sector: ${sector.name} | lat: ${sector.latitude} | lng: ${sector.longitude}`)
+  }
+}
+
+// Al cambiar comuna en el form de edición, actualizar coordenadas
+const onEditSectorChange = () => {
+  const sector = sectorsList.value.find((s) => s.id === editForm.sectorId)
+  if (sector) {
+    editForm.latitude = sector.latitude
+    editForm.longitude = sector.longitude
+  }
+}
+
 onMounted(async () => {
   await fetchTasks()
   sectorsList.value = await sectorApi.getAllSectors()
+  // ── DEBUG: ver qué devuelve el API de sectores ──
+  console.group('🌎 [Tasks DEBUG] Sectores cargados desde API')
+  console.table(
+    sectorsList.value.map((s) => ({
+      id: s.id,
+      nombre: s.name,
+      latitud: s.latitude,
+      longitud: s.longitude,
+    }))
+  )
+  console.groupEnd()
 })
 
 const fetchTasks = async () => {
@@ -203,6 +233,14 @@ const resetForm = () => {
 }
 
 const createTask = async () => {
+  // ── DEBUG: ver qué se envía al backend ──
+  console.log('🚀 [createTask] Datos enviados al backend:', {
+    title: taskForm.title,
+    sectorId: taskForm.sectorId,
+    latitude: taskForm.latitude,
+    longitude: taskForm.longitude,
+    dueDate: taskForm.dueDate,
+  })
   try {
     await taskApi.createTask(taskForm)
     resetForm()

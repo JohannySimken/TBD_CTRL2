@@ -158,6 +158,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import statsApi from '@/api/stats.js'
+import taskApi from '@/api/task.js'
 
 const loading = ref(true)
 const avgDist = ref(null)
@@ -176,7 +177,7 @@ const barWidth = (val, max) => Math.round((val / max) * 100)
 
 onMounted(async () => {
   try {
-    const [resAvg, resClosest, res2k, res5k, resClusters, resRank, resBySector] =
+    const [resAvg, resClosest, res2k, res5k, resClusters, resRank, resBySector, allPending] =
       await Promise.all([
         statsApi.getAvgDistanceCompleted(),
         statsApi.getClosestPendingTask(),
@@ -185,6 +186,7 @@ onMounted(async () => {
         statsApi.getPendingBySectorCluster(),
         statsApi.getTasksPerUserBySector(),
         statsApi.getTasksBySector(),
+        taskApi.getTasks({ status: 'PENDING' }),
       ])
 
     avgDist.value = resAvg
@@ -194,6 +196,23 @@ onMounted(async () => {
     clusters.value = resClusters
     ranking.value = resRank
     tasksBySector.value = resBySector
+
+    // ── DEBUG: tabla de tareas pendientes con coordenadas ──────────────────
+    console.group('📍 [Stats DEBUG] Tareas PENDING con ubicación')
+    console.table(
+      allPending.map((t) => ({
+        id: t.id,
+        titulo: t.title,
+        sector: t.sectorName,
+        vencimiento: t.dueDate,
+        latitud: t.latitude,
+        longitud: t.longitude,
+        'es la más cercana?': resClosest && t.id === resClosest.id ? '✅ SÍ' : '',
+      }))
+    )
+    console.log('🏆 Más cercana según backend:', resClosest)
+    console.groupEnd()
+    // ───────────────────────────────────────────────────────────────────────
   } catch (err) {
     console.error('Error cargando estadísticas:', err)
   } finally {

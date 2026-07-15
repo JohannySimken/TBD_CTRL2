@@ -1,5 +1,6 @@
 package com.backend.taskmanagement.controllers;
 
+import com.backend.taskmanagement.dtos.sector.SectorResponseDTO;
 import com.backend.taskmanagement.entities.SectorEntity;
 import com.backend.taskmanagement.services.SectorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,12 @@ public class SectorController {
     private SectorService sectorService;
 
     @GetMapping
-    public ResponseEntity<List<SectorEntity>> getAll() {
+    public ResponseEntity<List<SectorResponseDTO>> getAll() {
         return ResponseEntity.ok(sectorService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SectorEntity> getById(@PathVariable Long id) {
+    public ResponseEntity<SectorResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(sectorService.findById(id));
     }
 
