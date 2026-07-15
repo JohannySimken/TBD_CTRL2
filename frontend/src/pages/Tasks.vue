@@ -3,7 +3,7 @@
     <h2>Gestión de Tareas</h2>
 
     <div v-if="urgentTasks.length > 0" style="border: 1px solid red; padding: 10px">
-      <strong>⚠️ Tareas por vencer pronto:</strong>
+      <strong> Tareas por vencer pronto:</strong>
       <ul>
         <li v-for="t in urgentTasks" :key="t.id">{{ t.title }} - Vence: {{ t.dueDate }}</li>
       </ul>
@@ -24,7 +24,7 @@
     <form @submit.prevent="createTask">
       <input v-model="taskForm.title" placeholder="Título" required />
       <input v-model="taskForm.description" placeholder="Descripción" required />
-      <input v-model="taskForm.dueDate" type="datetime-local" required />
+      <input v-model="taskForm.dueDate" type="date" required title="Fecha de vencimiento" />
 
       <select v-model="taskForm.sectorId" required>
         <option value="" disabled>Selecciona Sector</option>
