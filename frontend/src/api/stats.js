@@ -56,17 +56,6 @@ const statsService = {
   },
 
   /**
-   * 4-custom) Promedio de distancia de tareas completadas desde un punto arbitrario.
-   * @param {Number} lat
-   * @param {Number} lng
-   * @returns {Promise<Number>}
-   */
-  async getAvgDistanceCompletedCustom(lat, lng) {
-    const response = await api.get('/stats/avg-distance-custom', { params: { lat, lng } })
-    return response.data || 0
-  },
-
-  /**
    * 4b) Promedio de distancia de las tareas completadas respecto a un punto arbitrario elegido por el usuario.
    * @param {number} latitude
    * @param {number} longitude
