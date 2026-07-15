@@ -16,8 +16,9 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     SELECT s.name AS sector_name, COUNT(t.id) as task_count
     FROM tasks t
     JOIN sectors s ON t.sector_id = s.id
-    WHERE t.user_id = :userId and t.status = 'COMPLETED'
+    WHERE t.user_id = :userId AND t.status = 'COMPLETED'
     GROUP BY s.name
+    ORDER BY task_count DESC
     """, nativeQuery = true)
     List<Object[]> countTasksByUserForSector(@Param("userId") Long userId);
 

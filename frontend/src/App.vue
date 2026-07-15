@@ -32,6 +32,9 @@ const isAuthenticated = ref(false)
 const username = ref('')
 
 watchEffect(() => {
+  // Dependencia en route.path para re-ejecutar en cada navegación
+  void route.path
+
   const token = localStorage.getItem('loa_token')
   const userStr = localStorage.getItem('loa_user')
 

@@ -38,9 +38,17 @@ const taskService = {
    * @returns {Promise<Object>} - Retorna TaskResponseDTO con el status actualizado
    */
   async completeTask(id) {
-    // Axios requiere un cuerpo (body) en las peticiones PATCH/PUT/POST.
-    // Como el backend no espera un DTO aquí (solo el @PathVariable), enviamos un objeto vacío {}.
     const response = await api.patch(`/tasks/${id}/complete`, {})
+    return response.data
+  },
+
+  /**
+   * Revierte una tarea completada a estado PENDING.
+   * @param {Number} id - ID de la tarea
+   * @returns {Promise<Object>} - Retorna TaskResponseDTO con status PENDING
+   */
+  async revertTask(id) {
+    const response = await api.patch(`/tasks/${id}/revert`, {})
     return response.data
   },
 

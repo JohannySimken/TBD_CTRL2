@@ -110,6 +110,21 @@ public class TaskService {
         return toResponseDTO(saved);
     }
 
+    public TaskResponseDTO revertTask(Long userId, Long taskId) {
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
+
+        if (!task.getUser().getId().equals(userId)) {
+            throw new RuntimeException("No tienes permisos para modificar esta tarea");
+        }
+
+        task.setStatus("PENDING");
+        task.setCompletedAt(null);
+
+        TaskEntity saved = taskRepository.save(task);
+        return toResponseDTO(saved);
+    }
+
     public List<TaskResponseDTO> getTasks(Long userId, String status, String keyword) {
         List<TaskEntity> tasks;
 

@@ -42,6 +42,12 @@ public class TaskController {
         return ResponseEntity.ok(taskService.completeTask(userId, id));
     }
 
+    @PatchMapping("/{id}/revert")
+    public ResponseEntity<TaskResponseDTO> revertTask(HttpServletRequest request, @PathVariable Long id) {
+        Long userId = (Long) request.getAttribute("userId");
+        return ResponseEntity.ok(taskService.revertTask(userId, id));
+    }
+
     @GetMapping
     public ResponseEntity<List<TaskResponseDTO>> getTasks(HttpServletRequest request,
                                                           @RequestParam(required = false) String status,

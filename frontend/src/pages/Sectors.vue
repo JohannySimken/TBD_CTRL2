@@ -53,7 +53,6 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Categoría</th>
-          // Redirigir al dashboard/tareas tras éxito
           <th>Descripción</th>
           <th v-if="isAdmin">Acciones</th>
         </tr>
