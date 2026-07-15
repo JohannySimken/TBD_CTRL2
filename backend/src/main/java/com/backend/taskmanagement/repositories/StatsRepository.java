@@ -46,7 +46,7 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     GROUP BY s.name
     ORDER BY completed_count DESC LIMIT 1
     """, nativeQuery = true)
-    Object[] findTopSectorCompletedWithin2km(@Param("userId") Long userId);
+    List<Object[]> findTopSectorCompletedWithin2km(@Param("userId") Long userId);
 
     //4- ¿Cuál es el promedio de distancia de las tareas completadas respecto a la ubicación del usuario?
     @Query(value = """
@@ -98,7 +98,7 @@ public interface StatsRepository extends JpaRepository<TaskEntity, Long> {
     GROUP BY s.name
     ORDER BY completed_count DESC LIMIT 1
     """, nativeQuery = true)
-    Object[] findTopSectorCompletedWithin5km(@Param("userId") Long userId);
+    List<Object[]> findTopSectorCompletedWithin5km(@Param("userId") Long userId);
 
     //8- ¿Cuál es el promedio de distancia entre las tareas completadas y el punto registrado del usuario?
     @Query(value = """

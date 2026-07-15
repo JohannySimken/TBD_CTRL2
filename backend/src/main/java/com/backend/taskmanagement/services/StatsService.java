@@ -47,10 +47,11 @@ public class StatsService {
 
     // 3) ¿Cuál es el sector con más tareas completadas en un radio de 2 kilómetros del usuario?
     public SectorCountDTO getTopSectorWithin2km(Long userId) {
-        Object[] row = statsRepository.findTopSectorCompletedWithin2km(userId);
-        if (row == null || row.length == 0) {
+        List<Object[]> rows = statsRepository.findTopSectorCompletedWithin2km(userId);
+        if (rows.isEmpty()) {
             return null;
         }
+        Object[] row = rows.get(0);
         return new SectorCountDTO(
                 (String) row[0],
                 ((Number) row[1]).longValue()
@@ -60,10 +61,11 @@ public class StatsService {
     // 7) ¿Cuál es el sector con más tareas completadas dentro de un radio de 5 km
     //desde la ubicación del usuario? (Es la 3 pero usando radio de 5 km)
     public SectorCountDTO getTopSectorWithin5km(Long userId) {
-        Object[] row = statsRepository.findTopSectorCompletedWithin5km(userId);
-        if (row == null || row.length == 0) {
+        List<Object[]> rows = statsRepository.findTopSectorCompletedWithin5km(userId);
+        if (rows.isEmpty()) {
             return null;
         }
+        Object[] row = rows.get(0);
         return new SectorCountDTO(
                 (String) row[0],
                 ((Number) row[1]).longValue()
