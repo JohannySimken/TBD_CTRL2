@@ -97,17 +97,23 @@ El `seed.sql` deja dos usuarios con contraseña utilizable para iniciar sesión 
 
 ### 2. Gestión de Tareas (`/tasks`)
 
-- Formulario para crear una tarea nueva: título, descripción, fecha de vencimiento y comuna (sector).
-- Filtros por estado (`Pendientes` / `Completadas`) y por palabra clave.
-- Aviso destacado de tareas próximas a vencer.
-- Cada tarea se puede editar, eliminar o marcar como completada desde el listado.
+- Formulario para crear una tarea nueva: título, descripción, **fecha y hora de vencimiento** y comuna (sector). No se puede crear (ni el navegador ni el backend lo permiten) una tarea con vencimiento en el pasado.
+- Filtros por estado (`Pendientes` / `Completadas` / `Expiradas`) y por palabra clave.
+- Cada tarea se puede editar, eliminar o marcar como completada desde el listado. Si editás una tarea `Expirada` y le ponés una fecha/hora futura, vuelve automáticamente a `Pendiente`.
+- Las tareas `Pendientes` pasan solas a `Expiradas` apenas se cumple su fecha y hora de vencimiento (chequeo cada vez que se listan tareas, más un job de respaldo que corre cada minuto en el backend).
 
-### 3. Gestión de Sectores (`/sectors`)
+### 3. Notificaciones (campanita en el header)
+
+- El ícono de campana en la barra de navegación muestra las tareas **pendientes que vencen dentro de los próximos 7 días**, ordenadas por la más próxima a vencer.
+- Se actualiza al navegar entre páginas y también hace polling cada 5 minutos.
+- Una tarea deja de aparecer ahí sola cuando se completa, se edita a otra fecha, o expira.
+
+### 4. Gestión de Sectores (`/sectors`)
 
 - Cualquier usuario autenticado puede ver el listado de sectores (comunas).
 - Los usuarios con rol **ADMIN** además pueden crear, editar y eliminar sectores, indicando latitud/longitud del centroide.
 
-### 4. Dashboard Estadístico (`/stats`)
+### 5. Dashboard Estadístico (`/stats`)
 
 Responde las 8 preguntas geoespaciales del sistema, cada una en su propia sección:
 

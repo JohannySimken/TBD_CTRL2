@@ -35,7 +35,7 @@ CREATE TABLE tasks (
     description         TEXT,
     status              VARCHAR(20)             NOT NULL DEFAULT 'PENDING', -- Tarea por defecto 'PENDING'
     location            GEOGRAPHY(Point, 4326)  NOT NULL,
-    due_date            DATE                    NOT NULL,
+    due_date            TIMESTAMP               NOT NULL,
     completed_at        TIMESTAMP,
     notification_sent   BOOLEAN                 NOT NULL DEFAULT FALSE,
     created_at          TIMESTAMP               NOT NULL DEFAULT NOW(),

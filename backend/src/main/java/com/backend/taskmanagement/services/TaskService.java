@@ -13,9 +13,10 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,12 +40,17 @@ public class TaskService {
         SectorEntity sector = sectorRepository.findById(dto.getSectorId())
                 .orElseThrow(() -> new RuntimeException("Sector no encontrado"));
 
+        LocalDateTime dueDate = LocalDateTime.parse(dto.getDueDate());
+        if (dueDate.isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("La fecha y hora de vencimiento no puede ser en el pasado");
+        }
+
         TaskEntity task = new TaskEntity();
         task.setUser(user);
         task.setSector(sector);
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
-        task.setDueDate(LocalDate.parse(dto.getDueDate()));
+        task.setDueDate(dueDate);
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
         Point location = geometryFactory.createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
@@ -68,7 +74,15 @@ public class TaskService {
 
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
-        task.setDueDate(LocalDate.parse(dto.getDueDate()));
+
+        LocalDateTime newDueDate = LocalDateTime.parse(dto.getDueDate());
+        task.setDueDate(newDueDate);
+
+        // Si la tarea estaba EXPIRED y se pospone a una fecha futura, vuelve a quedar PENDING.
+        if ("EXPIRED".equals(task.getStatus()) && newDueDate.isAfter(LocalDateTime.now())) {
+            task.setStatus("PENDING");
+            task.setNotificationSent(false);
+        }
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
         Point location = geometryFactory.createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
@@ -125,7 +139,18 @@ public class TaskService {
         return toResponseDTO(saved);
     }
 
+    // Se ejecuta cada minuto como respaldo, además del chequeo al listar tareas,
+    // para que una tarea pase a EXPIRED apenas se cumple su fecha/hora de vencimiento.
+    @Scheduled(cron = "0 * * * * *")
+    @Transactional
+    public void expireOverdueTasks() {
+        taskRepository.expireOverdueTasks();
+    }
+
+    @Transactional
     public List<TaskResponseDTO> getTasks(Long userId, String status, String keyword) {
+        taskRepository.expireOverdueTasks();
+
         List<TaskEntity> tasks;
 
         if (status != null && keyword != null) {

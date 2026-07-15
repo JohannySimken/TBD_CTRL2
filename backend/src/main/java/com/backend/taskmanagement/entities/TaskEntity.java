@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.locationtech.jts.geom.Point;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -38,7 +37,7 @@ public class TaskEntity {
     private Point location;
 
     @Column(name = "due_date", nullable = false)
-    private LocalDate dueDate;
+    private LocalDateTime dueDate;
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;

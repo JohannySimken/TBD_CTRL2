@@ -19,7 +19,7 @@ public class NotificationService {
     private TaskRepository taskRepository;
 
     /*
-     Revisa diariamente (a las 8:00 AM) las tareas pendientes próximas a vencer. Si una tarea vence en los próximos 2 días y aún no se ha enviado notificación,
+     Revisa diariamente (a las 8:00 AM) las tareas pendientes próximas a vencer. Si una tarea vence dentro de la próxima semana y aún no se ha enviado notificación,
      la marca como notificada y registra un log.
      */
     @Scheduled(cron = "0 0 8 * * *")
